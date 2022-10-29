@@ -1,4 +1,5 @@
-﻿using MySqlConnector;
+﻿using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 using VetServer.Data;
 using VetServer.Models.Interfaces;
 
@@ -13,31 +14,31 @@ namespace VetServer.Models.Repositories
             this.appDbContext = appDbContext;
         }
 
-        public Pet GetPet(int petId)
+        public async Task<Pet> GetPet(int petId)
         {
-            return appDbContext.Pet.FirstOrDefault(p => p.Id == petId);
+            return await appDbContext.Pet.FirstOrDefaultAsync(p => p.Id == petId);
         }
 
-        public IEnumerable<Pet> GetPets()
+        public async Task<IEnumerable<Pet>> GetPets()
         {
-            return appDbContext.Pet.ToList();
+            return await appDbContext.Pet.ToListAsync();
         }
 
-        public Pet CreatePet(Pet pet)
+        public async Task<Pet> CreatePet(Pet pet)
         {
-            var result = appDbContext.Pet.Add(pet);
-            appDbContext.SaveChanges();
+            var result = await appDbContext.Pet.AddAsync(pet);
+            await appDbContext.SaveChangesAsync();
             return result.Entity;
         }
 
-        public Pet UpdatePet(Pet pet)
+        public async Task<Pet> UpdatePet(Pet pet)
         {
-            var result = appDbContext.Pet.FirstOrDefault(p => p.Id == pet.Id);
+            var result = await appDbContext.Pet.FirstOrDefaultAsync(p => p.Id == pet.Id);
 
             if (result != null)
             {
                 appDbContext.Entry(pet).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                appDbContext.SaveChanges();
+                await appDbContext.SaveChangesAsync();
                 return result;
             }
             return null;

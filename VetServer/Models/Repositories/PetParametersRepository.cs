@@ -1,4 +1,5 @@
-﻿using VetServer.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using VetServer.Data;
 using VetServer.Models.Interfaces;
 
 namespace VetServer.Models.Repositories
@@ -12,44 +13,44 @@ namespace VetServer.Models.Repositories
             this.appDbContext = appDbContext;
         }
 
-        public PetParameters CreatePetParameters(PetParameters petParams)
+        public async Task<PetParameters> CreatePetParameters(PetParameters petParams)
         {
-            var result = appDbContext.PetParameters.Add(petParams);
-            appDbContext.SaveChanges();
+            var result = await appDbContext.PetParameters.AddAsync(petParams);
+            await appDbContext.SaveChangesAsync();
             return result.Entity;
         }
 
-        public IEnumerable<PetParameters> GetPetParamsPerHour(int petId)
+        public async Task<IEnumerable<PetParameters>> GetPetParamsPerHour(int petId)
         {
             DateTime currentTime = DateTime.Now;
             DateTime hourEarlier = currentTime.AddHours(-1);
-            return GetPetParamsPerTimePeriod(petId, hourEarlier, currentTime);
+            return await GetPetParamsPerTimePeriod(petId, hourEarlier, currentTime);
         }
 
-        public IEnumerable<PetParameters> GetPetParamsPerDay(int petId)
+        public async Task<IEnumerable<PetParameters>> GetPetParamsPerDay(int petId)
         {
             DateTime currentTime = DateTime.Now;
             DateTime dayEarlier = currentTime.AddHours(-24);
-            return GetPetParamsPerTimePeriod(petId, dayEarlier, currentTime);
+            return await GetPetParamsPerTimePeriod(petId, dayEarlier, currentTime);
         }
 
-        public IEnumerable<PetParameters> GetPetParamsPerWeek(int petId)
+        public async Task<IEnumerable<PetParameters>> GetPetParamsPerWeek(int petId)
         {
             DateTime currentTime = DateTime.Now;
             DateTime weekEarlier = currentTime.AddDays(-7);
-            return GetPetParamsPerTimePeriod(petId, weekEarlier, currentTime);
+            return await GetPetParamsPerTimePeriod(petId, weekEarlier, currentTime);
         }
-        public IEnumerable<PetParameters> GetPetParamsPerMonth(int petId)
+        public async Task<IEnumerable<PetParameters>> GetPetParamsPerMonth(int petId)
         {
             DateTime currentTime = DateTime.Now;
             DateTime monthEarlier = currentTime.AddMonths(-1);
-            return GetPetParamsPerTimePeriod(petId, monthEarlier, currentTime);
+            return await GetPetParamsPerTimePeriod(petId, monthEarlier, currentTime);
         }
 
-        public IEnumerable<PetParameters> GetPetParamsPerTimePeriod(int petId, DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<PetParameters>> GetPetParamsPerTimePeriod(int petId, DateTime startDate, DateTime endDate)
         {
-            return appDbContext.PetParameters.Where(p => p.PetId == petId
-            && p.CreatedDateTime >= startDate && p.CreatedDateTime <= endDate);
+            return await appDbContext.PetParameters.Where(p => p.PetId == petId
+            && p.CreatedDateTime >= startDate && p.CreatedDateTime <= endDate).ToListAsync();
         }
     }
 }

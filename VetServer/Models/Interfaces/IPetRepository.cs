@@ -2,10 +2,10 @@
 {
     public interface IPetRepository
     {
-        public Pet GetPet(int petId);
-        public IEnumerable<Pet> GetPets();
-        public Pet CreatePet(Pet pet);
+        public Task<Pet> GetPet(int petId);
+        public Task<IEnumerable<Pet>> GetPets();
+        public Task<Pet> CreatePet(Pet pet);
 
-        public Pet UpdatePet(Pet pet);
+        public Task<Pet> UpdatePet(Pet pet);
     }
 }

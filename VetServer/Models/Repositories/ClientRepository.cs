@@ -13,41 +13,41 @@ namespace VetServer.Models.Repositories
             this.appDbContext = appDbContext;
         }
 
-        public Client GetClient(int clientId)
+        public async Task<Client> GetClient(int clientId)
         {
-            return appDbContext.Client.FirstOrDefault(c => c.Id == clientId);
+            return await appDbContext.Client.FirstOrDefaultAsync(c => c.Id == clientId);
         }
 
-        public Client GetClientByUsername(string username)
+        public async Task<Client> GetClientByUsername(string username)
         {
-            return appDbContext.Client.FirstOrDefault(c => c.Username == username);
+            return await appDbContext.Client.FirstOrDefaultAsync(c => c.Username == username);
         }
 
-        public Pet GetClientPet(int clientId, int petId)
+        public async Task<Pet> GetClientPet(int clientId, int petId)
         {
-            return appDbContext.Pet.FirstOrDefault(p => p.Id == petId && p.ClientId == clientId);
+            return await appDbContext.Pet.FirstOrDefaultAsync(p => p.Id == petId && p.ClientId == clientId);
         }
 
-        public IEnumerable<Pet> GetClientPets(int clientId)
+        public async Task<IEnumerable<Pet>> GetClientPets(int clientId)
         {
-            return appDbContext.Pet.Where(p => p.ClientId == clientId);
+            return await appDbContext.Pet.Where(p => p.ClientId == clientId).ToListAsync();
         }
 
-        public Client CreateClient(Client client)
+        public async Task<Client> CreateClient(Client client)
         {
-            var result = appDbContext.Client.Add(client);
-            appDbContext.SaveChanges();
+            var result = await appDbContext.Client.AddAsync(client);
+            await appDbContext.SaveChangesAsync();
             return result.Entity;
         }
 
-        public Client UpdateClient(Client client)
+        public async Task<Client> UpdateClient(Client client)
         {
-            var result = appDbContext.Client.FirstOrDefault(c => c.Id == client.Id);
+            var result = await appDbContext.Client.FirstOrDefaultAsync(c => c.Id == client.Id);
 
             if (result != null)
             {
                 appDbContext.Entry(client).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                appDbContext.SaveChanges();
+                await appDbContext.SaveChangesAsync();
                 return result;
             }
             return null;

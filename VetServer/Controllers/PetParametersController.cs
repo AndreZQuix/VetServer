@@ -17,42 +17,42 @@ namespace VetServer.Controllers
         }
 
         [HttpGet("{petId}/lasthour")]
-        public IActionResult GetPetParamsPerHour(int petId)
+        public async Task<IActionResult> GetPetParamsPerHour(int petId)
         {
-            return Ok(petParamsRepository.GetPetParamsPerHour(petId));
+            return Ok(await petParamsRepository.GetPetParamsPerHour(petId));
         }
 
         [HttpGet("{petId}/lastday")]
-        public IActionResult GetPetParamsPerDay(int petId)
+        public async Task<IActionResult> GetPetParamsPerDay(int petId)
         {
-            return Ok(petParamsRepository.GetPetParamsPerDay(petId));
+            return Ok(await petParamsRepository.GetPetParamsPerDay(petId));
         }
 
         [HttpGet("{petId}/lastweek")]
-        public IActionResult GetPetParamsPerWeek(int petId)
+        public async Task<IActionResult> GetPetParamsPerWeek(int petId)
         {
-            return Ok(petParamsRepository.GetPetParamsPerWeek(petId));
+            return Ok(await petParamsRepository.GetPetParamsPerWeek(petId));
         }
 
         [HttpGet("{petId}/lastmonth")]
-        public IActionResult GetPetParamsPerMonth(int petId)
+        public async Task<IActionResult> GetPetParamsPerMonth(int petId)
         {
-            return Ok(petParamsRepository.GetPetParamsPerMonth(petId));
+            return Ok(await petParamsRepository.GetPetParamsPerMonth(petId));
         }
 
         [HttpGet("{petId}/{startDate}/{endDate}")]
-        public IActionResult GetPetParamsPerTimePeriod(int petId, DateTime startDate, DateTime endDate)
+        public async Task<IActionResult> GetPetParamsPerTimePeriod(int petId, DateTime startDate, DateTime endDate)
         {
-            return Ok(petParamsRepository.GetPetParamsPerTimePeriod(petId, startDate, endDate));
+            return Ok(await petParamsRepository.GetPetParamsPerTimePeriod(petId, startDate, endDate));
         }
 
         [HttpPost]
-        public IActionResult CreatePetParams(PetParameters petParams)
+        public async Task<IActionResult> CreatePetParams(PetParameters petParams)
         {
             if (petParams == null)
                 return BadRequest();
 
-            var createdPetParams = petParamsRepository.CreatePetParameters(petParams);
+            var createdPetParams = await petParamsRepository.CreatePetParameters(petParams);
             return CreatedAtAction(nameof(CreatePetParams), new { id = createdPetParams.Id }, createdPetParams);
         }
     }

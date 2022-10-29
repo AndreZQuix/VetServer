@@ -19,29 +19,29 @@ namespace VetServer.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPets()
+        public async Task<IActionResult> GetPets()
         {
-            return Ok(petRepository.GetPets());
+            return Ok(await petRepository.GetPets());
         }
 
         [HttpGet("{id:int}")]
-        public IActionResult GetPet(int id)
+        public async Task<IActionResult> GetPet(int id)
         {
-            return Ok(petRepository.GetPet(id));
+            return Ok(await petRepository.GetPet(id));
         }
 
         [HttpPost]
-        public IActionResult CreatePet(Pet pet)
+        public async Task<IActionResult> CreatePet(Pet pet)
         {
             if (pet == null)
                 return BadRequest();
 
-            var createdPet = petRepository.CreatePet(pet);
+            var createdPet = await petRepository.CreatePet(pet);
             return CreatedAtAction(nameof(CreatePet), new { id = createdPet.Id }, createdPet);
         }
 
         [HttpPut("{id:int}")]
-        public IActionResult UpdatePet(int petId, Pet pet)
+        public async Task<IActionResult> UpdatePet(int petId, Pet pet)
         {
             if (petId != pet.Id)
                 return BadRequest("ID mismatch");
@@ -49,12 +49,12 @@ namespace VetServer.Controllers
             if (pet == null)
                 return BadRequest();
 
-            var petToUpdate = petRepository.GetPet(petId);
+            var petToUpdate = await petRepository.GetPet(petId);
 
             if (petToUpdate == null)
                 return NotFound("Pet with Id = {petId} not found");
 
-            return Ok(petRepository.UpdatePet(pet));
+            return Ok(await petRepository.UpdatePet(pet));
         }
     }
 }
