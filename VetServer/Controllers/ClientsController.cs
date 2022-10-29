@@ -19,54 +19,89 @@ namespace VetServer.Controllers
         [HttpGet("{clientId:int}")]
         public async Task<IActionResult> GetClient(int clientId)
         {
-            return Ok(await clientRepository.GetClient(clientId));
+            try
+            {
+                return Ok(await clientRepository.GetClient(clientId));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
+            }
         }
 
         [HttpGet("{clientId:int}/{petId:int}")]
         public async Task<IActionResult> GetClientPet(int clientId, int petId)
         {
-            return Ok(await clientRepository.GetClientPet(clientId, petId));
+            try
+            {
+                return Ok(await clientRepository.GetClientPet(clientId, petId));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
+            }
         }
 
         [HttpGet("{clientId:int}/pets")]
         public async Task<IActionResult> GetClientPets(int clientId)
         {
-            return Ok(await clientRepository.GetClientPets(clientId));
+            try
+            {
+                return Ok(await clientRepository.GetClientPets(clientId));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateClient(Client client)
         {
-            if (client == null)
-                return BadRequest();
-
-            var cl = await clientRepository.GetClientByUsername(client.Username);
-
-            if (cl != null)
+            try
             {
-                ModelState.AddModelError("Username", "This username is already in use");
-                return BadRequest();
-            }
+                if (client == null)
+                    return BadRequest();
 
-            var createdClient = await clientRepository.CreateClient(client);
-            return CreatedAtAction(nameof(GetClient), new { id = createdClient.Id }, createdClient);
+                var cl = await clientRepository.GetClientByUsername(client.Username);
+
+                if (cl != null)
+                {
+                    ModelState.AddModelError("Username", "This username is already in use");
+                    return BadRequest();
+                }
+
+                var createdClient = await clientRepository.CreateClient(client);
+                return CreatedAtAction(nameof(GetClient), new { id = createdClient.Id }, createdClient);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error sending data to the database");
+            }
         }
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateClient(int clientId, Client client)
         {
-            if (clientId != client.Id)
-                return BadRequest("ID mismatch");
+            try
+            {
+                if (clientId != client.Id)
+                    return BadRequest("ID mismatch");
 
-            if (client == null)
-                return BadRequest();
+                if (client == null)
+                    return BadRequest();
 
-            var clientToUpdate = await clientRepository.GetClient(clientId);
+                var clientToUpdate = await clientRepository.GetClient(clientId);
 
-            if (clientToUpdate == null)
-                return NotFound("Pet with Id = {petId} not found");
+                if (clientToUpdate == null)
+                    return NotFound("Pet with Id = {petId} not found");
 
-            return Ok(await clientRepository.UpdateClient(client));
+                return Ok(await clientRepository.UpdateClient(client));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error sending data to the database");
+            }
         }
     }
 }

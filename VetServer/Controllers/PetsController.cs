@@ -21,40 +21,68 @@ namespace VetServer.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPets()
         {
-            return Ok(await petRepository.GetPets());
+            try
+            {
+                return Ok(await petRepository.GetPets());
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
+            }
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetPet(int id)
         {
-            return Ok(await petRepository.GetPet(id));
+            try
+            {
+                return Ok(await petRepository.GetPet(id));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> CreatePet(Pet pet)
         {
-            if (pet == null)
-                return BadRequest();
+            try
+            {
+                if (pet == null)
+                    return BadRequest();
 
-            var createdPet = await petRepository.CreatePet(pet);
-            return CreatedAtAction(nameof(CreatePet), new { id = createdPet.Id }, createdPet);
+                var createdPet = await petRepository.CreatePet(pet);
+                return CreatedAtAction(nameof(CreatePet), new { id = createdPet.Id }, createdPet);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error sending data to the database");
+            }
         }
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdatePet(int petId, Pet pet)
         {
-            if (petId != pet.Id)
-                return BadRequest("ID mismatch");
+            try
+            {
+                if (petId != pet.Id)
+                    return BadRequest("ID mismatch");
 
-            if (pet == null)
-                return BadRequest();
+                if (pet == null)
+                    return BadRequest();
 
-            var petToUpdate = await petRepository.GetPet(petId);
+                var petToUpdate = await petRepository.GetPet(petId);
 
-            if (petToUpdate == null)
-                return NotFound("Pet with Id = {petId} not found");
+                if (petToUpdate == null)
+                    return NotFound("Pet with Id = {petId} not found");
 
-            return Ok(await petRepository.UpdatePet(pet));
+                return Ok(await petRepository.UpdatePet(pet));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error sending data to the database");
+            }
         }
     }
 }
