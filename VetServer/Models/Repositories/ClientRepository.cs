@@ -18,6 +18,11 @@ namespace VetServer.Models.Repositories
             return await appDbContext.Client.FirstOrDefaultAsync(c => c.Id == clientId);
         }
 
+        public async Task<IEnumerable<Client>> GetClients()
+        {
+            return await appDbContext.Client.ToListAsync();
+        }
+
         public async Task<Client> GetClientByUsername(string username)
         {
             return await appDbContext.Client.FirstOrDefaultAsync(c => c.Username == username);
@@ -40,13 +45,14 @@ namespace VetServer.Models.Repositories
             return result.Entity;
         }
 
-        public async Task<Client> UpdateClient(Client client)
+        public async Task<Client> UpdateClient(int clientId, Client client)
         {
-            var result = await appDbContext.Client.FirstOrDefaultAsync(c => c.Id == client.Id);
+            var result = await appDbContext.Client.FirstOrDefaultAsync(c => c.Id == clientId);
 
             if (result != null)
             {
-                appDbContext.Entry(client).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                client.Id = clientId;
+                appDbContext.Entry(result).CurrentValues.SetValues(client);
                 await appDbContext.SaveChangesAsync();
                 return result;
             }

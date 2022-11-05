@@ -29,6 +29,20 @@ namespace VetServer.Controllers
             }
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> GetClients()
+        {
+            try
+            {
+                return Ok(await clientRepository.GetClients());
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
+            }
+        }
+
         [HttpGet("{clientId:int}/{petId:int}")]
         public async Task<IActionResult> GetClientPet(int clientId, int petId)
         {
@@ -81,22 +95,19 @@ namespace VetServer.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateClient(int clientId, Client client)
+        public async Task<IActionResult> UpdateClient(int id, Client client)
         {
             try
             {
-                if (clientId != client.Id)
-                    return BadRequest("ID mismatch");
-
                 if (client == null)
                     return BadRequest();
 
-                var clientToUpdate = await clientRepository.GetClient(clientId);
+                var clientToUpdate = await clientRepository.GetClient(id);
 
                 if (clientToUpdate == null)
-                    return NotFound("Pet with Id = {petId} not found");
+                    return NotFound($"Client with Id = {id} not found");
 
-                return Ok(await clientRepository.UpdateClient(client));
+                return Ok(await clientRepository.UpdateClient(id, client));
             }
             catch (Exception)
             {

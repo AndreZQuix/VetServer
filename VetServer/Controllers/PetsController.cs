@@ -62,22 +62,19 @@ namespace VetServer.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdatePet(int petId, Pet pet)
+        public async Task<IActionResult> UpdatePet(int id, Pet pet)
         {
             try
             {
-                if (petId != pet.Id)
-                    return BadRequest("ID mismatch");
-
                 if (pet == null)
                     return BadRequest();
 
-                var petToUpdate = await petRepository.GetPet(petId);
+                var petToUpdate = await petRepository.GetPet(id);
 
                 if (petToUpdate == null)
-                    return NotFound("Pet with Id = {petId} not found");
+                    return NotFound($"Pet with Id = {id} not found");
 
-                return Ok(await petRepository.UpdatePet(pet));
+                return Ok(await petRepository.UpdatePet(petToUpdate.Id, pet));
             }
             catch (Exception)
             {

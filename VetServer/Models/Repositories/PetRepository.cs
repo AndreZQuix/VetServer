@@ -31,13 +31,14 @@ namespace VetServer.Models.Repositories
             return result.Entity;
         }
 
-        public async Task<Pet> UpdatePet(Pet pet)
+        public async Task<Pet> UpdatePet(int petId, Pet pet)
         {
-            var result = await appDbContext.Pet.FirstOrDefaultAsync(p => p.Id == pet.Id);
+            var result = await appDbContext.Pet.FirstOrDefaultAsync(p => p.Id == petId);
 
             if (result != null)
             {
-                appDbContext.Entry(pet).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                pet.Id = petId;
+                appDbContext.Entry(result).CurrentValues.SetValues(pet);
                 await appDbContext.SaveChangesAsync();
                 return result;
             }
