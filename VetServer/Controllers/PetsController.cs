@@ -7,6 +7,9 @@ using VetServer.Models.Repositories;
 
 namespace VetServer.Controllers
 {
+    /// <summary>
+    /// Controller for pets data processing.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class PetsController : Controller
@@ -18,6 +21,9 @@ namespace VetServer.Controllers
             this.petRepository = petRepository;
         }
 
+        /// <summary>
+        /// Get the list of all pets.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetPets()
         {
@@ -31,6 +37,9 @@ namespace VetServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Get the pet data by it's id.
+        /// </summary>
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetPet(int id)
         {
@@ -44,6 +53,9 @@ namespace VetServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Create pet record.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> CreatePet(Pet pet)
         {
@@ -61,6 +73,9 @@ namespace VetServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Update pet data.
+        /// </summary>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdatePet(int id, Pet pet)
         {

@@ -5,6 +5,9 @@ using VetServer.Models.Repositories;
 
 namespace VetServer.Controllers
 {
+    /// <summary>
+    /// Controller for clients data processing.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ClientsController : Controller
@@ -16,6 +19,9 @@ namespace VetServer.Controllers
             this.clientRepository = clientRepository;
         }
 
+        /// <summary>
+        /// Get the client data by it's id.
+        /// </summary>
         [HttpGet("{clientId:int}")]
         public async Task<IActionResult> GetClient(int clientId)
         {
@@ -29,7 +35,9 @@ namespace VetServer.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Get the list of all clients.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetClients()
         {
@@ -43,6 +51,9 @@ namespace VetServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Get the client pet data by their id's.
+        /// </summary>
         [HttpGet("{clientId:int}/{petId:int}")]
         public async Task<IActionResult> GetClientPet(int clientId, int petId)
         {
@@ -56,6 +67,9 @@ namespace VetServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Get the list of all client pets.
+        /// </summary>
         [HttpGet("{clientId:int}/pets")]
         public async Task<IActionResult> GetClientPets(int clientId)
         {
@@ -69,6 +83,9 @@ namespace VetServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Create client record.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> CreateClient(Client client)
         {
@@ -94,6 +111,9 @@ namespace VetServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Update client data.
+        /// </summary>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateClient(int id, Client client)
         {

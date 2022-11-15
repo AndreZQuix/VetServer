@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using VetServer.Models.Interfaces;
 using VetServer.Models.Repositories;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,29 @@ builder.Services.AddScoped<IPetRepository, PetRepository>();
 builder.Services.AddScoped<IPetParametersRepository, PetParametersRepository>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Version = "v1",
+        Title = "VetServer API",
+        Description = "Process veterinary data with VetServer API",
+        Contact = new Microsoft.OpenApi.Models.OpenApiContact
+        {
+            Name = "Andre",
+            Email = "andrez.quix@gmail.com",
+        }
+    });
+
+    //Set the comments path for the swagger json and ui.
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, "VetServerApi.xml");
+    c.IncludeXmlComments(xmlPath);
+});
+
 var app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "VetServer API v1"); });
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

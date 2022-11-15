@@ -4,6 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>G:\VS\VetServer\VetServer\bin\Debug\net6.0\VetServerApi.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +19,7 @@
     </PackageReference>
     <PackageReference Include="MySqlConnector" Version="2.2.0-rc.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
 

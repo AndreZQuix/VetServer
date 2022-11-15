@@ -6,6 +6,9 @@ using VetServer.Models.Repositories;
 
 namespace VetServer.Controllers
 {
+    /// <summary>
+    /// Controller for pet vitals data processing.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class PetParametersController : Controller
@@ -17,7 +20,10 @@ namespace VetServer.Controllers
             this.petParamsRepository = petParamsRepository;
         }
 
-        [HttpGet("{petId}/lasthour")]
+        /// <summary>
+        /// Get pet vitals data record per hour.
+        /// </summary>
+        [HttpGet("{petId}/hour")]
         public async Task<IActionResult> GetPetParamsPerHour(int petId)
         {
             try
@@ -30,7 +36,11 @@ namespace VetServer.Controllers
             }
         }
 
-        [HttpGet("{petId}/lastday")]
+        /// <summary>
+        /// Get pet vitals data record per day.
+        /// </summary>
+        /// 
+        [HttpGet("{petId}/day")]
         public async Task<IActionResult> GetPetParamsPerDay(int petId)
         {
             try
@@ -43,7 +53,10 @@ namespace VetServer.Controllers
             }
         }
 
-        [HttpGet("{petId}/lastweek")]
+        /// <summary>
+        /// Get pet vitals data record per week.
+        /// </summary>
+        [HttpGet("{petId}/week")]
         public async Task<IActionResult> GetPetParamsPerWeek(int petId)
         {
             try
@@ -56,7 +69,10 @@ namespace VetServer.Controllers
             }
         }
 
-        [HttpGet("{petId}/lastmonth")]
+        /// <summary>
+        /// Get pet vitals data record per month.
+        /// </summary>
+        [HttpGet("{petId}/month")]
         public async Task<IActionResult> GetPetParamsPerMonth(int petId)
         {
             try
@@ -69,6 +85,9 @@ namespace VetServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Get pet vitals data record per period of time.
+        /// </summary>
         [HttpGet("{petId}/{startDate}/{endDate}")]
         public async Task<IActionResult> GetPetParamsPerTimePeriod(int petId, DateTime startDate, DateTime endDate)
         {
@@ -82,6 +101,9 @@ namespace VetServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Create pet vitals data record. DO NOT FILL THE TIMESTAMP FIELD IF IT'S NOT NECESSARY.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> CreatePetParams(PetParameters petParams)
         {
