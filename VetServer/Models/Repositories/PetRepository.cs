@@ -31,7 +31,7 @@ namespace VetServer.Models.Repositories
             return result.Entity;
         }
 
-        public async Task<Pet> UpdatePet(int petId, Pet pet)
+        public async Task<Pet> UpdatePetFull(int petId, Pet pet)
         {
             var result = await appDbContext.Pet.FirstOrDefaultAsync(p => p.Id == petId);
 

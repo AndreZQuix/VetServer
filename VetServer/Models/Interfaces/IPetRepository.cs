@@ -6,6 +6,6 @@
         public Task<IEnumerable<Pet>> GetPets();
         public Task<Pet> CreatePet(Pet pet);
 
-        public Task<Pet> UpdatePet(int petId, Pet pet);
+        public Task<Pet> UpdatePetFull(int petId, Pet pet);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace VetServer.Models
 {
@@ -19,6 +20,10 @@ namespace VetServer.Models
         [Required]
         [MinLength(5)]
         public string Password { get; set; }
+
+        [Required]
+        [JsonIgnore]
+        public string Salt { get; set; }
 
         [Required]
         [MinLength(5)]

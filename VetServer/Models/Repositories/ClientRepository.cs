@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VetServer.Data;
 using VetServer.Models.Interfaces;
+using VetServer.Utils;
 
 namespace VetServer.Models.Repositories
 {
@@ -40,23 +41,35 @@ namespace VetServer.Models.Repositories
 
         public async Task<Client> CreateClient(Client client)
         {
+            client.Salt = HashData.GetSalt();
+            client.Password = HashData.HashString(client.Password, client.Salt);
             var result = await appDbContext.Client.AddAsync(client);
             await appDbContext.SaveChangesAsync();
             return result.Entity;
         }
 
-        public async Task<Client> UpdateClient(int clientId, Client client)
+        public async Task<Client> UpdateClientFull(int clientId, Client client)
         {
             var result = await appDbContext.Client.FirstOrDefaultAsync(c => c.Id == clientId);
 
             if (result != null)
             {
                 client.Id = clientId;
+                client.Password = HashData.HashString(client.Password, client.Salt);
                 appDbContext.Entry(result).CurrentValues.SetValues(client);
                 await appDbContext.SaveChangesAsync();
                 return result;
             }
             return null;
+        }
+
+        public async Task<Client> ClientLogIn(string username, string password)
+        {
+            var client = await GetClientByUsername(username);
+            if (client.Password == HashData.HashString(password, client.Salt))
+                return client;
+            else
+                return null;
         }
     }
 }

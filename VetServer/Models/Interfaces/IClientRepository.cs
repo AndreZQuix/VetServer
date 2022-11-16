@@ -8,6 +8,7 @@
         public Task<Pet> GetClientPet(int clientId, int petId);
         public Task<IEnumerable<Pet>> GetClientPets(int clientId);
         public Task<Client> CreateClient(Client client);
-        public Task<Client> UpdateClient(int clientId, Client client);
+        public Task<Client> UpdateClientFull(int clientId, Client client);
+        public Task<Client> ClientLogIn(string username, string password);
     }
 }

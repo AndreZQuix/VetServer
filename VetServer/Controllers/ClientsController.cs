@@ -2,6 +2,7 @@
 using VetServer.Models;
 using VetServer.Models.Interfaces;
 using VetServer.Models.Repositories;
+using VetServer.Utils;
 
 namespace VetServer.Controllers
 {
@@ -84,7 +85,7 @@ namespace VetServer.Controllers
         }
 
         /// <summary>
-        /// Create client record.
+        /// Create client record. FIELD ID IS CREATED AUTOMATICALLY. Do not fill it.
         /// </summary>
         [HttpPost]
         public async Task<IActionResult> CreateClient(Client client)
@@ -97,13 +98,14 @@ namespace VetServer.Controllers
                 var cl = await clientRepository.GetClientByUsername(client.Username);
 
                 if (cl != null)
-                {
-                    ModelState.AddModelError("Username", "This username is already in use");
-                    return BadRequest();
-                }
+                    return StatusCode(StatusCodes.Status303SeeOther, "This username is already in use");
 
                 var createdClient = await clientRepository.CreateClient(client);
-                return CreatedAtAction(nameof(GetClient), new { id = createdClient.Id }, createdClient);
+                return CreatedAtAction(nameof(GetClient), new { id = createdClient.Id }, 
+                    new { Id = createdClient.Id, 
+                    Name = createdClient.Name, 
+                    Username = createdClient.Username, 
+                    Email = createdClient.Email });
             }
             catch (Exception)
             {
@@ -112,10 +114,10 @@ namespace VetServer.Controllers
         }
 
         /// <summary>
-        /// Update client data.
+        /// Update FULL client data (even password).
         /// </summary>
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateClient(int id, Client client)
+        public async Task<IActionResult> UpdateClientFull(int id, Client client)
         {
             try
             {
@@ -127,9 +129,47 @@ namespace VetServer.Controllers
                 if (clientToUpdate == null)
                     return NotFound($"Client with Id = {id} not found");
 
-                return Ok(await clientRepository.UpdateClient(id, client));
+                var result = await clientRepository.UpdateClientFull(id, client);
+                return Ok(new { Id = result.Id, 
+                    Name = result.Name, 
+                    Username = result.Username, 
+                    Email = result.Email });
             }
             catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error sending data to the database");
+            }
+        }
+
+        /// <summary>
+        /// Try to log in by client username.
+        /// </summary>
+        [HttpGet("login/{username}/{password}")]
+        public async Task<IActionResult> ClientLogIn(string username, string password)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(username))
+                    return BadRequest();
+
+                var result = await clientRepository.ClientLogIn(username, password);
+                if (result != null)
+                {
+                    return Ok(new
+                    {
+                        Id = result.Id,
+                        Name = result.Name,
+                        Username = result.Username,
+                        Email = result.Email
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized, "Wrong client data");
+                }
+
+            }
+            catch(Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error sending data to the database");
             }

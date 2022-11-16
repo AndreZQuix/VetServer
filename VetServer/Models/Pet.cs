@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VetServer.Models
@@ -6,6 +7,7 @@ namespace VetServer.Models
     public class Pet
     {
         [Key]
+        [ReadOnly(true)]
         public int Id { get; set; }
 
         [Required]

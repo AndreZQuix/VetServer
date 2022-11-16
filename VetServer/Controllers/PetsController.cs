@@ -54,7 +54,7 @@ namespace VetServer.Controllers
         }
 
         /// <summary>
-        /// Create pet record.
+        /// Create pet record. FIELD ID IS CREATED AUTOMATICALLY. Do not fill it.
         /// </summary>
         [HttpPost]
         public async Task<IActionResult> CreatePet(Pet pet)
@@ -74,10 +74,10 @@ namespace VetServer.Controllers
         }
 
         /// <summary>
-        /// Update pet data.
+        /// Update FULL pet data.
         /// </summary>
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdatePet(int id, Pet pet)
+        public async Task<IActionResult> UpdatePetFull(int id, Pet pet)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace VetServer.Controllers
                 if (petToUpdate == null)
                     return NotFound($"Pet with Id = {id} not found");
 
-                return Ok(await petRepository.UpdatePet(petToUpdate.Id, pet));
+                return Ok(await petRepository.UpdatePetFull(petToUpdate.Id, pet));
             }
             catch (Exception)
             {
