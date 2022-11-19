@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using VetServer.Data;
 using VetServer.Models.Interfaces;
 
@@ -7,7 +8,6 @@ namespace VetServer.Models.Repositories
     public class PetParametersRepository : IPetParametersRepository
     {
         private readonly ApplicationDbContext appDbContext;
-
         public PetParametersRepository(ApplicationDbContext appDbContext)
         {
             this.appDbContext = appDbContext;
@@ -17,6 +17,7 @@ namespace VetServer.Models.Repositories
         {
             var result = await appDbContext.PetParameters.AddAsync(petParams);
             await appDbContext.SaveChangesAsync();
+            result.Entity.Id = petParams.Id;
             return result.Entity;
         }
 
@@ -24,14 +25,16 @@ namespace VetServer.Models.Repositories
         {
             DateTime currentTime = DateTime.Now;
             DateTime hourEarlier = currentTime.AddHours(-1);
-            return await GetPetParamsPerTimePeriod(petId, hourEarlier, currentTime);
+            var res = await GetPetParamsPerTimePeriod(petId, hourEarlier, currentTime);
+            return res;
         }
 
         public async Task<IEnumerable<PetParameters>> GetPetParamsPerDay(int petId)
         {
             DateTime currentTime = DateTime.Now;
             DateTime dayEarlier = currentTime.AddHours(-24);
-            return await GetPetParamsPerTimePeriod(petId, dayEarlier, currentTime);
+            var res = await GetPetParamsPerTimePeriod(petId, dayEarlier, currentTime);
+            return res;
         }
 
         public async Task<IEnumerable<PetParameters>> GetPetParamsPerWeek(int petId)

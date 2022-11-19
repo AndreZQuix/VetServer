@@ -26,14 +26,14 @@ namespace VetServer.Models.Repositories
 
         public async Task<Pet> CreatePet(Pet pet)
         {
-            var result = await appDbContext.Pet.AddAsync(pet);
+            var result = await appDbContext.Pet.AddAsync(pet);        
             await appDbContext.SaveChangesAsync();
             return result.Entity;
         }
 
         public async Task<Pet> UpdatePetFull(int petId, Pet pet)
         {
-            var result = await appDbContext.Pet.FirstOrDefaultAsync(p => p.Id == petId);
+            var result = await GetPet(petId);
 
             if (result != null)
             {

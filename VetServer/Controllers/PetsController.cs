@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using VetServer.Data;
 using VetServer.Models;
@@ -54,18 +55,18 @@ namespace VetServer.Controllers
         }
 
         /// <summary>
-        /// Create pet record. FIELD ID IS CREATED AUTOMATICALLY. Do not fill it.
+        /// Create pet record.
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> CreatePet(Pet pet)
+        public async Task<IActionResult> CreatePet(/*PetPOST*/ Pet pet)
         {
             try
             {
                 if (pet == null)
                     return BadRequest();
 
-                var createdPet = await petRepository.CreatePet(pet);
-                return CreatedAtAction(nameof(CreatePet), new { id = createdPet.Id }, createdPet);
+                var res = await petRepository.CreatePet(pet);
+                return Ok(res);
             }
             catch (Exception)
             {
@@ -77,19 +78,14 @@ namespace VetServer.Controllers
         /// Update FULL pet data.
         /// </summary>
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdatePetFull(int id, Pet pet)
+        public async Task<IActionResult> UpdatePetFull(int id, /*PetPOST*/ Pet pet)
         {
             try
             {
                 if (pet == null)
                     return BadRequest();
 
-                var petToUpdate = await petRepository.GetPet(id);
-
-                if (petToUpdate == null)
-                    return NotFound($"Pet with Id = {id} not found");
-
-                return Ok(await petRepository.UpdatePetFull(petToUpdate.Id, pet));
+                return Ok(await petRepository.UpdatePetFull(id, pet));
             }
             catch (Exception)
             {

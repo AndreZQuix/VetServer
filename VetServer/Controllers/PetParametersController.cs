@@ -113,7 +113,7 @@ namespace VetServer.Controllers
                     return BadRequest();
 
                 var createdPetParams = await petParamsRepository.CreatePetParameters(petParams);
-                return CreatedAtAction(nameof(CreatePetParams), new { id = createdPetParams.Id }, createdPetParams);
+                return Ok(createdPetParams);
             }
             catch
             {

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace VetServer.Models
@@ -7,28 +6,39 @@ namespace VetServer.Models
     public class Client
     {
         [Key]
-        public int Id { get; set; }
+        public virtual int Id { get; internal set; }
 
         [Required]
         [MinLength(2)]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         [Required]
         [MinLength(3)]
-        public string Username { get; set; }
+        public virtual string Username { get; set; }
 
         [Required]
         [MinLength(5)]
-        public string Password { get; set; }
+        public virtual string Password { get; set; }
 
-        [Required]
         [JsonIgnore]
-        public string Salt { get; set; }
+        public virtual string? Salt { get; set; }
 
         [Required]
         [MinLength(5)]
-        public string Email { get; set; }
+        public virtual string Email { get; set; }
 
         //public IEnumerable<Pet> Pets { get; set; }
+    }
+
+
+    /// <summary>
+    /// Class for displaying client data (password is hidden).
+    /// </summary>
+    public class ClientModelGET : Client
+    {
+        [Required]
+        [MinLength(5)]
+        [JsonIgnore]
+        public override string Password { get; set; }
     }
 }

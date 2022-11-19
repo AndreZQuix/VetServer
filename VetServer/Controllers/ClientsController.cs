@@ -28,7 +28,7 @@ namespace VetServer.Controllers
         {
             try
             {
-                return Ok(await clientRepository.GetClient(clientId));
+                return Ok(await clientRepository.ShowClient(clientId));
             }
             catch (Exception)
             {
@@ -44,7 +44,7 @@ namespace VetServer.Controllers
         {
             try
             {
-                return Ok(await clientRepository.GetClients());
+                return Ok(await clientRepository.ShowClients());
             }
             catch (Exception)
             {
@@ -85,7 +85,7 @@ namespace VetServer.Controllers
         }
 
         /// <summary>
-        /// Create client record. FIELD ID IS CREATED AUTOMATICALLY. Do not fill it.
+        /// Create client record.
         /// </summary>
         [HttpPost]
         public async Task<IActionResult> CreateClient(Client client)
@@ -101,11 +101,7 @@ namespace VetServer.Controllers
                     return StatusCode(StatusCodes.Status303SeeOther, "This username is already in use");
 
                 var createdClient = await clientRepository.CreateClient(client);
-                return CreatedAtAction(nameof(GetClient), new { id = createdClient.Id }, 
-                    new { Id = createdClient.Id, 
-                    Name = createdClient.Name, 
-                    Username = createdClient.Username, 
-                    Email = createdClient.Email });
+                return Ok(clientRepository.ConvertToClientDataModelGET(createdClient));
             }
             catch (Exception)
             {
@@ -124,16 +120,11 @@ namespace VetServer.Controllers
                 if (client == null)
                     return BadRequest();
 
-                var clientToUpdate = await clientRepository.GetClient(id);
-
-                if (clientToUpdate == null)
-                    return NotFound($"Client with Id = {id} not found");
-
                 var result = await clientRepository.UpdateClientFull(id, client);
-                return Ok(new { Id = result.Id, 
-                    Name = result.Name, 
-                    Username = result.Username, 
-                    Email = result.Email });
+                if (result != null)
+                    return Ok(clientRepository.ConvertToClientDataModelGET(result));
+                else
+                    return StatusCode(StatusCodes.Status404NotFound, "Wrong client id Or Username is already in use");
             }
             catch (Exception)
             {
@@ -154,19 +145,9 @@ namespace VetServer.Controllers
 
                 var result = await clientRepository.ClientLogIn(username, password);
                 if (result != null)
-                {
-                    return Ok(new
-                    {
-                        Id = result.Id,
-                        Name = result.Name,
-                        Username = result.Username,
-                        Email = result.Email
-                    });
-                }
+                    return Ok(clientRepository.ConvertToClientDataModelGET(result));
                 else
-                {
                     return StatusCode(StatusCodes.Status401Unauthorized, "Wrong client data");
-                }
 
             }
             catch(Exception)
