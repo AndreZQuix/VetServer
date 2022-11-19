@@ -74,5 +74,8 @@ _[Ss]cripts
 *.ncrunchsolution
 *.dot[Cc]over
 .vs/
+Properties/
 
 VetServer/appsettings.json
+VetServer/appsettings.Production.json
+VetServer/appsettings.Development.json
