@@ -49,9 +49,10 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 app.UseSwagger();
-app.UseSwaggerUI(c => { 
+app.UseSwaggerUI(c =>
+{
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "VetServer API v1");
-    c.RoutePrefix = "";
+    c.RoutePrefix = string.Empty;
 });
 
 // Configure the HTTP request pipeline.
@@ -72,5 +73,6 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
