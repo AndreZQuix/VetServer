@@ -20,7 +20,9 @@ namespace VetServer.Models
 
         public virtual float? Temperature { get; set; }
 
-        public virtual DateTime CreatedDateTime { get; set; } = DateTime.Now;
+        public virtual int? MuscleActivity { get; set; }
+
+        public virtual DateTimeOffset CreatedDateTime { get; set; } = DateTimeOffset.Now;
 
 
         [ForeignKey("Pet")]
